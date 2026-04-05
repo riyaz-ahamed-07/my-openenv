@@ -1,71 +1,55 @@
 # SupportTriageEnv Dockerfile
 #
-# Builds a self-contained OpenEnv-compliant environment server.
-# Compatible with:
-#   - Local development: docker build + docker run
-#   - HuggingFace Spaces: openenv push / HF Docker Space
+# Single-stage build: installs all Python deps then runs from source.
+# This avoids the "pip install /app/env" failure caused by setuptools
+# trying to import openenv-core before it's installed.
 #
 # Build:
 #   docker build -t support-triage-env .
 #
-# Run:
-#   docker run -p 8000:8000 support-triage-env
+# Run (local):
+#   docker run -p 7860:7860 support-triage-env
 #
 # Test:
-#   curl http://localhost:8000/health
+#   curl http://localhost:7860/health
 
-# ── Stage 1: Builder ─────────────────────────────────────────────────────────
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install build tools
+# System deps (needed by some transitive packages)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
-    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Install pip dependencies into a virtual environment for clean copying
-RUN python -m venv /app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
+# Upgrade pip first
+RUN pip install --no-cache-dir --upgrade pip
 
-# Copy requirements first for Docker layer caching
-COPY server/requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+# Install Python dependencies directly (no package self-install needed)
+# openenv-core brings fastapi, uvicorn, pydantic, websockets
+RUN pip install --no-cache-dir \
+    "openenv-core>=0.2.3" \
+    "fastapi>=0.104.0" \
+    "uvicorn[standard]>=0.24.0" \
+    "pydantic>=2.0.0" \
+    "websockets>=12.0" \
+    "openai>=1.0.0"
 
-# Copy application code
+# Copy application source (runs from source — no pip install of local package)
 COPY . /app/env
 
-# Install the package itself
-RUN pip install --no-cache-dir /app/env
-
-# ── Stage 2: Runtime ──────────────────────────────────────────────────────────
-FROM python:3.11-slim AS runtime
-
-WORKDIR /app
-
-# Copy virtual environment from builder
-COPY --from=builder /app/.venv /app/.venv
-COPY --from=builder /app/env /app/env
-
-# Set environment paths
-ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app/env:$PYTHONPATH"
-
-# Enable web interface for HuggingFace Space (allows interactive debugging)
+# Add project root to PYTHONPATH so all imports work
+ENV PYTHONPATH="/app/env"
 ENV ENABLE_WEB_INTERFACE=true
 
-# HuggingFace Spaces uses port 7860 by default; we support both
+# HuggingFace Spaces requires port 7860
 ENV PORT=7860
 EXPOSE 7860
-EXPOSE 8000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-7860}/health')" || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=5 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:7860/health')" || exit 1
 
-# Start the server
-# Uses PORT env var so it works on both HF Spaces (7860) and local (8000)
+# Start the server — cd into /app/env so relative imports resolve correctly
 CMD ["sh", "-c", "cd /app/env && uvicorn server.app:app --host 0.0.0.0 --port ${PORT:-7860}"]
