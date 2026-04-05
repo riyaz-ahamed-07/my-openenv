@@ -80,6 +80,11 @@ class SupportTriageEnvironment(Environment):
             max_possible_reward=1.0,
         )
 
+    def close(self) -> None:
+        """Cleanup environment resources."""
+        # No heavy resources (like browser contexts) to clean up in this environment
+        self._episode = None
+
     # ─────────────────────────────────────────────────────────────────────────
     # reset()
     # ─────────────────────────────────────────────────────────────────────────
