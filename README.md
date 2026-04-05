@@ -1,3 +1,19 @@
+---
+title: Support Triage Env Environment Server
+emoji: 🎫
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+app_port: 7860
+base_path: /web
+tags:
+  - openenv
+  - reinforcement-learning
+  - customer-support
+  - llm-agents
+---
+
 # 🎫 SupportTriageEnv
 
 **An OpenEnv environment for training AI agents on real-world customer support ticket triage.**
