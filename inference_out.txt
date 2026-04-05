@@ -1,0 +1,57 @@
+=== STDOUT ===
+[INFO] Starting SupportTriageEnv baseline
+[INFO] Model: gpt-4o-mini
+[INFO] API Base: https://api.openai.com/v1
+[INFO] Environment URL: https://darkknight1217-support-triage-env.hf.space
+[INFO] Tasks: ['task_1_easy', 'task_2_medium', 'task_3_hard']
+
+
+============================================================
+[INFO] Running task_1_easy
+============================================================
+{"event": "START", "task": "task_1_easy", "env": "support_triage_env", "model": "gpt-4o-mini", "timestamp": 1775418293.9176307}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 1, "action": "priority=medium, dept=general, response_len=0", "reward": 0.0, "done": true, "error": null}
+{"event": "END", "success": false, "steps": 1, "score": 0.0, "rewards": [0.0], "total_reward": 0.0}
+
+============================================================
+[INFO] Running task_2_medium
+============================================================
+{"event": "START", "task": "task_2_medium", "env": "support_triage_env", "model": "gpt-4o-mini", "timestamp": 1775418300.9760442}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 1, "action": "priority=medium, dept=general, response_len=0", "reward": 0.0, "done": false, "error": null}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 2, "action": "priority=medium, dept=general, response_len=0", "reward": 0.3, "done": false, "error": null}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 3, "action": "priority=medium, dept=general, response_len=0", "reward": 0.025, "done": false, "error": null}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 4, "action": "priority=medium, dept=general, response_len=0", "reward": 0.05, "done": false, "error": null}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 5, "action": "priority=medium, dept=general, response_len=0", "reward": 0.0, "done": true, "error": null}
+{"event": "END", "success": false, "steps": 5, "score": 0.075, "rewards": [0.0, 0.3, 0.025, 0.05, 0.0], "total_reward": 0.375}
+
+============================================================
+[INFO] Running task_3_hard
+============================================================
+{"event": "START", "task": "task_3_hard", "env": "support_triage_env", "model": "gpt-4o-mini", "timestamp": 1775418306.0429342}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 1, "action": "priority=medium, dept=general, response_len=0", "reward": 0.0, "done": false, "error": null}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 2, "action": "priority=medium, dept=general, response_len=0", "reward": 0.0, "done": false, "error": null}
+[DEBUG] Model request failed: Error code: 401 - {'error': {'message': "You didn't provide an API key. You need to provide your API key in an Authorization header using Bearer auth (i.e. Authorization: Bearer YOUR_KEY), or as the password field (with blank username) if you're accessing the API from your browser and are prompted for a username and password. You can obtain an API key from https://platform.openai.com/account/api-keys.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+{"event": "STEP", "step": 3, "action": "priority=medium, dept=general, response_len=0", "reward": 0.025, "done": true, "error": null}
+{"event": "END", "success": false, "steps": 3, "score": 0.008333333333333333, "rewards": [0.0, 0.0, 0.025], "total_reward": 0.025}
+
+============================================================
+[SUMMARY] Baseline Results
+============================================================
+  ? task_1_easy          score=0.0000  steps=1  rewards=[0.0]
+  ? task_2_medium        score=0.0750  steps=5  rewards=[0.0, 0.3, 0.025, 0.05, 0.0]
+  ? task_3_hard          score=0.0083  steps=3  rewards=[0.0, 0.0, 0.025]
+
+  Overall avg score: 0.0278
+============================================================
+
+=== STDERR ===
+
+=== Return code: 0 ===

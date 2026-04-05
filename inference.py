@@ -39,8 +39,12 @@ from openai import OpenAI
 
 API_BASE_URL: str = os.environ.get("API_BASE_URL", "https://api.openai.com/v1")
 MODEL_NAME: str = os.environ.get("MODEL_NAME", "gpt-4o-mini")
-API_KEY: str = os.environ.get("HF_TOKEN", os.environ.get("OPENAI_API_KEY", "sk-placeholder"))
+# Checklist requires no default for HF_TOKEN
+HF_TOKEN: Optional[str] = os.environ.get("HF_TOKEN")
 HF_SPACE_URL: str = os.environ.get("HF_SPACE_URL", "http://localhost:8000")
+
+# For local OpenAI client compatibility if HF_TOKEN is missing
+API_KEY: str = HF_TOKEN or os.environ.get("OPENAI_API_KEY", "")
 
 TEMPERATURE: float = 0.2          # Low temp for reproducibility
 MAX_TOKENS: int = 512             # Cap response length

@@ -122,11 +122,13 @@ class SupportTriageEnv(EnvClient):
 
     def _parse_result(self, data: Dict[str, Any]) -> StepResponse:
         """Parse a JSON-serializable dict into a StepResponse."""
+        # Pass the raw dict for 'observation' to satisfy StepResponse's validation
+        # while keeping the data for inference.py to use.
+        # Note: metadata is omitted as SDK's StepResponse does not define it.
         return StepResponse(
-            observation=SupportTriageObservation.model_validate(data["observation"]),
+            observation=data["observation"],
             reward=data.get("reward"),
             done=data.get("done", False),
-            metadata=data.get("metadata", {}),
         )
 
     def _parse_state(self, data: Dict[str, Any]) -> SupportTriageState:
