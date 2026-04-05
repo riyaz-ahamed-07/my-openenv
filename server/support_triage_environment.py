@@ -134,6 +134,16 @@ class SupportTriageEnvironment(Environment):
             last_feedback=None,
         )
 
+    async def reset_async(
+        self,
+        seed: Optional[int] = None,
+        task_id: Optional[str] = None,
+        episode_id: Optional[str] = None,
+        **kwargs: Any,
+    ) -> SupportTriageObservation:
+        """Async wrapper for reset() (WebSocket handler calls this)."""
+        return self.reset(seed=seed, task_id=task_id, episode_id=episode_id, **kwargs)
+
     # ─────────────────────────────────────────────────────────────────────────
     # step()
     # ─────────────────────────────────────────────────────────────────────────

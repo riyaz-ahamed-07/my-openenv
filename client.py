@@ -36,7 +36,7 @@ from typing import Any, Dict, Optional
 
 try:
     from openenv.core.env_client import EnvClient
-    from openenv.core.env_server.types import StepResult
+    from openenv.core.env_server.types import StepResponse
 except ImportError:
     # Minimal stub when openenv-core is not available
     class EnvClient:  # type: ignore[no-redef]
@@ -83,8 +83,6 @@ class SupportTriageEnv(EnvClient):
     def __init__(self, base_url: str, **kwargs: Any) -> None:
         super().__init__(
             base_url=base_url,
-            action_type=SupportTriageAction,
-            observation_type=SupportTriageObservation,
             **kwargs,
         )
 
@@ -94,7 +92,7 @@ class SupportTriageEnv(EnvClient):
         seed: Optional[int] = None,
         episode_id: Optional[str] = None,
         **kwargs: Any,
-    ):
+    ) -> StepResponse:
         """
         Reset the environment and start a new episode.
 
@@ -104,7 +102,7 @@ class SupportTriageEnv(EnvClient):
             episode_id: Custom episode ID
 
         Returns:
-            StepResult with initial observation
+            StepResponse with initial observation
         """
         params: Dict[str, Any] = {"task_id": task_id}
         if seed is not None:
@@ -113,3 +111,24 @@ class SupportTriageEnv(EnvClient):
             params["episode_id"] = episode_id
         params.update(kwargs)
         return await super().reset(**params)
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Abstract method implementations for openenv-core SDK
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _step_payload(self, action: SupportTriageAction) -> Dict[str, Any]:
+        """Convert a typed Action to a JSON-serializable dict."""
+        return action.model_dump()
+
+    def _parse_result(self, data: Dict[str, Any]) -> StepResponse:
+        """Parse a JSON-serializable dict into a StepResponse."""
+        return StepResponse(
+            observation=SupportTriageObservation.model_validate(data["observation"]),
+            reward=data.get("reward"),
+            done=data.get("done", False),
+            metadata=data.get("metadata", {}),
+        )
+
+    def _parse_state(self, data: Dict[str, Any]) -> SupportTriageState:
+        """Parse a JSON-serializable dict into a typed State."""
+        return SupportTriageState.model_validate(data)
