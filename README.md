@@ -207,7 +207,7 @@ cd support-triage-env
 pip install -e .
 
 # Start the server
-uvicorn server.app:app --host 0.0.0.0 --port 8000 --reload
+uvicorn server.app:app --host 0.0.0.0 --port 7860 --reload
 ```
 
 Open `http://localhost:8000/docs` to see the FastAPI docs.  
@@ -220,10 +220,10 @@ Open `http://localhost:8000/web` to use the interactive web interface.
 docker build -t support-triage-env .
 
 # Run
-docker run -p 8000:8000 support-triage-env
+docker run -p 7860:7860 support-triage-env
 
 # Health check
-curl http://localhost:8000/health
+curl http://localhost:7860/health
 ```
 
 ### Python Client
@@ -234,7 +234,7 @@ from client import SupportTriageEnv
 from models import SupportTriageAction
 
 async def main():
-    async with SupportTriageEnv(base_url="http://localhost:8000") as env:
+    async with SupportTriageEnv(base_url="http://localhost:7860") as env:
         # Task 2: multi-ticket routing
         result = await env.reset(task_id="task_2_medium")
 
@@ -261,7 +261,7 @@ asyncio.run(main())
 from client import SupportTriageEnv
 from models import SupportTriageAction
 
-with SupportTriageEnv(base_url="http://localhost:8000").sync() as env:
+with SupportTriageEnv(base_url="http://localhost:7860").sync() as env:
     result = env.reset(task_id="task_1_easy")
     obs = result.observation
     action = SupportTriageAction(
@@ -283,7 +283,7 @@ with SupportTriageEnv(base_url="http://localhost:8000").sync() as env:
 export API_BASE_URL="https://api.openai.com/v1"
 export MODEL_NAME="gpt-4o-mini"
 export HF_TOKEN="sk-your-api-key"
-export HF_SPACE_URL="http://localhost:8000"  # or your HF Space URL
+export HF_SPACE_URL="http://localhost:7860"  # or your HF Space URL
 
 # Run baseline
 python inference.py
@@ -291,10 +291,10 @@ python inference.py
 
 ### Expected Output Format
 
-```json
-{"event": "START", "task": "task_1_easy", "env": "support_triage_env", "model": "gpt-4o-mini", ...}
-{"event": "STEP", "step": 1, "action": "priority=urgent, dept=technical", "reward": 0.85, "done": true, ...}
-{"event": "END", "success": true, "steps": 1, "score": 0.85, "rewards": [0.85], ...}
+```text
+[START] task=task_1_easy env=support_triage_env model=gpt-4o-mini
+[STEP] step=1 action=priority=urgent, dept=technical reward=0.85 done=true error=null
+[END] success=true steps=1 score=0.85 rewards=0.85
 ```
 
 ### Expected Baseline Scores
