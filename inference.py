@@ -99,16 +99,7 @@ Be direct, professional, and concise. Do not add JSON markdown fences."""
 
 
 def log_start(task: str, env: str, model: str) -> None:
-    print(
-        json.dumps({
-            "event": "START",
-            "task": task,
-            "env": env,
-            "model": model,
-            "timestamp": time.time(),
-        }),
-        flush=True,
-    )
+    print(f"[START] task={task} env={env} model={model}", flush=True)
 
 
 def log_step(
@@ -118,15 +109,11 @@ def log_step(
     done: bool,
     error: Optional[str] = None,
 ) -> None:
+    done_str = "true" if done else "false"
+    error_str = error if error else "null"
     print(
-        json.dumps({
-            "event": "STEP",
-            "step": step,
-            "action": action if isinstance(action, str) else json.dumps(action),
-            "reward": reward,
-            "done": done,
-            "error": error,
-        }),
+        f"[STEP] step={step} action={action} reward={reward:.2f} "
+        f"done={done_str} error={error_str}",
         flush=True,
     )
 
@@ -137,15 +124,11 @@ def log_end(
     score: float,
     rewards: List[float],
 ) -> None:
+    success_str = "true" if success else "false"
+    rewards_str = ",".join(f"{r:.2f}" for r in rewards)
     print(
-        json.dumps({
-            "event": "END",
-            "success": success,
-            "steps": steps,
-            "score": score,
-            "rewards": rewards,
-            "total_reward": sum(rewards),
-        }),
+        f"[END] success={success_str} steps={steps} score={score:.2f} "
+        f"rewards={rewards_str}",
         flush=True,
     )
 
