@@ -37,15 +37,15 @@ from openai import OpenAI
 # Configuration
 # ─────────────────────────────────────────────────────────────────────────────
 
-API_BASE_URL: str = os.environ.get("API_BASE_URL", "https://api.openai.com/v1")
-MODEL_NAME: str = os.environ.get("MODEL_NAME", "gpt-4o-mini")
-# Checklist requires no default for HF_TOKEN
+# Deep Validation requires these to match their proxy injection
+API_BASE_URL: str = os.environ.get("API_BASE_URL") or "https://router.huggingface.co/v1"
+MODEL_NAME: str = os.environ.get("MODEL_NAME") or "Qwen/Qwen2.5-72B-Instruct"
 HF_TOKEN: Optional[str] = os.environ.get("HF_TOKEN")
-HF_SPACE_URL: str = os.environ.get("HF_SPACE_URL", "http://localhost:8000")
+HF_SPACE_URL: str = os.environ.get("HF_SPACE_URL", "http://localhost:7860")
 LOCAL_IMAGE_NAME: Optional[str] = os.environ.get("LOCAL_IMAGE_NAME")
 
-# For local OpenAI client compatibility if HF_TOKEN is missing
-API_KEY: str = HF_TOKEN or os.environ.get("OPENAI_API_KEY", "")
+# Final API Key prioritization for proxy detection
+API_KEY: str = os.environ.get("API_KEY") or HF_TOKEN or ""
 
 TEMPERATURE: float = 0.2          # Low temp for reproducibility
 MAX_TOKENS: int = 512             # Cap response length
