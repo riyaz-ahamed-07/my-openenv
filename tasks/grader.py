@@ -369,12 +369,11 @@ def grade_step(
     raw_reward = max(0.0, raw_reward)
     result["raw_reward"] = round(raw_reward, 4)
 
-    # ── Final reward (tier-weighted, normalised by tier mult) ─────────────────
-    # We scale by tier but then normalise so max possible ~ 1.0 per step
-    final_reward = (raw_reward * tier_mult) / tier_mult  # tier affects rank, not absolute scale
-    # Actually apply tier as additive bonus to make enterprise tickets matter more
-    tier_bonus = (tier_mult - 1.0) * base_score * 0.2  # small bonus
-    final_reward = min(1.0, raw_reward + tier_bonus)
+    # Final reward (tier-weighted, normalized by tier mult)
+    # Applied safety margin to satisfy (0, 1) exclusive range requirement
+    tier_bonus = (tier_mult - 1.0) * base_score * 0.2
+    score_sum = raw_reward + tier_bonus
+    final_reward = min(max(score_sum, 0.01), 0.99)
     result["final_reward"] = round(final_reward, 4)
 
     # ── Notes summary ────────────────────────────────────────────────────────

@@ -333,12 +333,11 @@ async def run_task(
                 if done:
                     break
 
-        # Compute normalized score
-        # Max possible reward = number of tickets (each ticket can earn up to 1.0)
+        # Compute normalized score strictly within (0.01, 0.99) to satisfy validator
         task_ticket_counts = {"task_1_easy": 1, "task_2_medium": 5, "task_3_hard": 3}
         max_reward = float(task_ticket_counts.get(task_id, 1))
-        score = sum(rewards) / max_reward if max_reward > 0 else 0.0
-        score = min(max(score, 0.0), 1.0)
+        raw_score = sum(rewards) / max_reward if max_reward > 0 else 0.0
+        score = min(max(raw_score, 0.01), 0.99)
         success = score >= SUCCESS_SCORE_THRESHOLD
 
     except Exception as e:
