@@ -314,7 +314,9 @@ async def run_task(
                 # Execute step
                 result = await env.step(action)
 
-                reward = float(result.reward or 0.0)
+                # Clamp individual rewards to strictly (0, 1) as required by validator
+                raw_reward = float(result.reward or 0.01)
+                reward = min(max(raw_reward, 0.01), 0.99)
                 done = result.done
                 rewards.append(reward)
                 steps_taken = step
@@ -336,16 +338,19 @@ async def run_task(
         # Compute normalized score strictly within (0.01, 0.99) to satisfy validator
         task_ticket_counts = {"task_1_easy": 1, "task_2_medium": 5, "task_3_hard": 3}
         max_reward = float(task_ticket_counts.get(task_id, 1))
-        raw_score = sum(rewards) / max_reward if max_reward > 0 else 0.0
+        raw_score = sum(rewards) / max_reward if max_reward > 0 else 0.01
         score = min(max(raw_score, 0.01), 0.99)
         success = score >= SUCCESS_SCORE_THRESHOLD
 
     except Exception as e:
         print(f"[DEBUG] Task {task_id} failed: {e}", flush=True)
-        score = 0.0
+        # CRITICAL: must never be 0.0 — validator rejects exact boundaries
+        score = 0.01
         success = False
 
     finally:
+        # Guarantee score is always strictly within (0, 1) regardless of code path
+        score = min(max(score, 0.01), 0.99)
         log_end(success=success, steps=steps_taken, score=score, rewards=rewards)
 
     return {
